@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* --- CÀI ĐẶT CHUNG --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            height: 100vh;
+            background-color: #ffc0cb;
+            background-image: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* --- CÁC MÀN HÌNH (SCREENS) --- */
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; /* Ẩn hết ban đầu */
+            flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s;
+        }
+        .active { display: flex; } /* Class để hiện màn hình đang dùng */
+
+        /* --- MÀN 1: KHÓA (LOCK SCREEN) --- */
+        .lock-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px; border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .lock-box input {
+            padding: 10px; font-size: 1.2rem; border-radius: 10px;
+            border: 2px solid #ff6b81; outline: none; text-align: center; width: 200px; margin: 10px 0;
+        }
+        .btn-main {
+            padding: 10px 25px; background: #ff6b81; color: white; border: none;
+            border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 1rem;
+            transition: 0.3s;
+        }
+        .btn-main:hover { background: #ff4757; transform: scale(1.05); }
+
+        /* --- MÀN 2: VIDEO --- */
+        #video-container { width: 80%; max-width: 800px; position: relative; }
+        video { width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-skip {
+            position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
+            background: white; color: #ff6b81;
+        }
+
+        /* --- MÀN 3: BỨC THƯ --- */
+        .letter-paper {
+            background: #fffdf0; width: 350px; min-height: 400px;
+            padding: 30px; border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            font-family: 'Dancing Script', cursive; font-size: 1.3rem; line-height: 1.6;
+        }
+        .letter-paper::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(#ccc 1px, transparent 1px);
+            background-size: 100% 1.5em; opacity: 0.3; pointer-events: none;
+        }
+        .click-hint {
+            position: absolute; bottom: 15px; right: 15px;
+            font-family: 'Nunito', sans-serif; font-size: 0.9rem;
+            color: #ff6b81; cursor: pointer; font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* --- MÀN 4: BÁNH & ẢNH & NHẠC --- */
+        .top-msg {
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #d63031;
+            text-shadow: 2px 2px white; z-index: 10;
+        }
+        .cake-img {
+            width: 300px; animation: bounce 3s infinite; z-index: 5;
+        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* ẢNH BAY (FLOATING PHOTOS) */
+        .floating-photo {
+            position: absolute; bottom: -200px; width: 120px;
+            border: 4px solid white; border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: floatUp linear forwards; z-index: 1;
+        }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); } }
+
+        /* --- TRÌNH PHÁT NHẠC SPOTIFY (GÓC TRÁI DƯỚI) --- */
+        .spotify-player {
+            position: fixed; bottom: 20px; left: 20px;
+            width: 300px; background: #191414; color: white;
+            padding: 15px; border-radius: 10px;
+            display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+            font-family: sans-serif;
+        }
+        .sp-header { display: flex; align-items: center; gap: 10px; }
+        .sp-cover { width: 50px; height: 50px; border-radius: 5px; background: #333; object-fit: cover;}
+        .sp-info { flex: 1; overflow: hidden; }
+        .sp-title { font-weight: bold; font-size: 0.9rem; white-space: nowrap; }
+        .sp-artist { font-size: 0.7rem; color: #b3b3b3; }
+        .sp-controls { display: flex; justify-content: center; gap: 20px; align-items: center; margin-top: 5px; }
+        .sp-btn { background: none; border: none; color: #b3b3b3; cursor: pointer; font-size: 1.2rem; }
+        .sp-btn:hover { color: white; }
+        .sp-play { color: white; font-size: 1.5rem; }
+        .sp-progress { width: 100%; height: 4px; background: #535353; border-radius: 2px; margin-top: 5px; position: relative;}
+        .sp-bar { height: 100%; background: #1db954; width: 0%; border-radius: 2px; transition: width 0.1s; }
+        
+        /* Responsive mobile */
+        @media (max-width: 600px) {
+            .spotify-player { width: 90%; left: 5%; bottom: 10px; }
+            .letter-paper { width: 90%; }
+            #video-container { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="screen-lock" class="screen active">
+        <div class="lock-box">
+            <h2 style="color: #ff6b81;">Nhập 4 số để mở khóa nè 🔒</h2>
+            <input type="password" id="pass-input" placeholder="****" maxlength="4">
+            <br>
+            <button class="btn-main" onclick="checkPass()">Mở Khóa</button>
+            <p id="error-msg" style="color: red; font-size: 0.9rem; display: none; margin-top: 10px;">Sai mật mã rồi!</p>
+        </div>
+    </div>
+
+    <div id="screen-video" class="screen">
+        <div id="video-container">
+            <video id="myVideo" controls>
+                <source src="cmsn.mp4" type="video/mp4">
+                Trình duyệt không hỗ trợ video.
+            </video>
+            <button class="btn-main btn-skip" onclick="finishVideo()">Xem xong rồi ❤️</button>
+        </div>
+    </div>
+
+    <div id="screen-letter" class="screen">
+        <div class="letter-paper">
+            <p>
+                Gửi cậu,<br><br>
+                Chúc mừng sinh nhật nhé! Đây là một món quà nhỏ tớ làm tặng cậu. 
+                Hy vọng tuổi mới cậu sẽ luôn vui vẻ, hạnh phúc và đạt được mọi điều mình mong muốn.<br><br>
+                Ăn nhiều chóng lớn nha!<br><br>
+                Ký tên,<br>
+                <b>[Tên bạn]</b>
+            </p>
+            <div class="click-hint" onclick="openParty()">👉 Bấm vào đây nè</div>
+        </div>
+    </div>
+
+    <div id="screen-party" class="screen">
+        <div class="top-msg">Chúc mọi điều tốt đẹp sẽ đến với cậu ❤️</div>
+        
+        <img src="https://i.pinimg.com/originals/37/e5/22/37e52296d9e504c5409c53644f1295b9.png" class="cake-img">
+        
+        <div class="spotify-player">
+            <div class="sp-header">
+                <img src="https://i.pinimg.com/564x/a2/63/c9/a263c938382c499299403487f5407024.jpg" class="sp-cover" id="track-art">
+                <div class="sp-info">
+                    <div class="sp-title" id="track-name">Loading...</div>
+                    <div class="sp-artist" id="track-artist">Special Playlist</div>
+                </div>
+            </div>
+            <div class="sp-progress"><div class="sp-bar" id="seek-bar"></div></div>
+            <div class="sp-controls">
+                <button class="sp-btn" onclick="prevTrack()"><i class="fas fa-step-backward"></i></button>
+                <button class="sp-btn sp-play" onclick="playPauseTrack()"><i class="fas fa-play" id="play-icon"></i></button>
+                <button class="sp-btn" onclick="nextTrack()"><i class="fas fa-step-forward"></i></button>
+            </div>
+        </div>
+        
+        <div id="floating-container"></div>
+    </div>
+
+    <audio id="main-audio"></audio>
+
+    <script>
+        // --- CẤU HÌNH DỮ LIỆU ---
+        const PASSWORD = "2301";
+        
+        // Danh sách nhạc (Thay link mp3 của bạn vào đây)
+        const musicList = [
+            {
+                name: "Happy Birthday Remix", // Tên bài hiện trên khung
+                artist: "DJ Party",
+                src: "talklove.mp3", // Link file mp3
+                img: "https://i.pinimg.com/564x/a2/63/c9/a263c938382c499299403487f5407024.jpg" // Ảnh bìa
+            },
+            {
+                name: "Love Song",
+                artist: "Singer Name",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                img: "https://i.pinimg.com/564x/d9/14/d9/d914d94cc84c9e334547926b472df37b.jpg"
+            },
+            // Thêm bài khác copy đoạn trên paste xuống
+        ];
+
+        // Danh sách ảnh bay (Thay link ảnh kỷ niệm vào đây)
+        const photos = [
+            "https://i.pinimg.com/564x/00/8e/e5/008ee578849051010701600307602664.jpg",
+            "https://i.pinimg.com/564x/78/8b/0e/788b0e01001320110765546003048657.jpg",
+            "https://i.pinimg.com/564x/67/20/03/67200385502011188018500040004000.jpg",
+            "https://i.pinimg.com/564x/c8/11/8e/c8118e53150017671408546621828400.jpg"
+        ];
+
+        // --- XỬ LÝ CHUYỂN MÀN HÌNH ---
+        function switchScreen(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            // Hiệu ứng fade in
+            const next = document.getElementById(showId);
+            next.classList.add('active');
+            next.style.opacity = 0;
+            setTimeout(() => next.style.opacity = 1, 50);
+        }
+
+        // 1. Kiểm tra mật khẩu
+        function checkPass() {
+            const val = document.getElementById('pass-input').value;
+            if(val === PASSWORD) {
+                switchScreen('screen-lock', 'screen-video');
+                // Tự động phát video
+                document.getElementById('myVideo').play();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        // 2. Kết thúc video -> Qua thư
+        function finishVideo() {
+            document.getElementById('myVideo').pause();
+            switchScreen('screen-video', 'screen-letter');
+        }
+
+        // 3. Mở tiệc -> Qua Bánh & Nhạc
+        function openParty() {
+            switchScreen('screen-letter', 'screen-party');
+            // Bắt đầu phát nhạc
+            loadTrack(0); // Luôn phát bài đầu tiên trước
+            playTrack();
+            // Bắt đầu thả ảnh
+            startFloatingPhotos();
+        }
+
+        // --- XỬ LÝ NHẠC SPOTIFY ---
+        let trackIndex = 0;
+        let isPlaying = false;
+        let currTrack = document.getElementById('main-audio');
+
+        function loadTrack(index) {
+            trackIndex = index;
+            currTrack.src = musicList[trackIndex].src;
+            currTrack.load();
+            
+            // Cập nhật giao diện Spotify
+            document.getElementById('track-art').src = musicList[trackIndex].img;
+            document.getElementById('track-name').innerText = musicList[trackIndex].name;
+            document.getElementById('track-artist').innerText = musicList[trackIndex].artist;
+            
+            // Khi hết bài thì tự qua bài ngẫu nhiên
+            currTrack.addEventListener("ended", nextTrack);
+        }
+
+        function playPauseTrack() {
+            if (!isPlaying) playTrack();
+            else pauseTrack();
+        }
+
+        function playTrack() {
+            currTrack.play();
+            isPlaying = true;
+            document.getElementById('play-icon').classList.remove('fa-play');
+            document.getElementById('play-icon').classList.add('fa-pause');
+        }
+
+        function pauseTrack() {
+            currTrack.pause();
+            isPlaying = false;
+            document.getElementById('play-icon').classList.remove('fa-pause');
+            document.getElementById('play-icon').classList.add('fa-play');
+        }
+
+        function nextTrack() {
+            // Random bài hát (trừ bài hiện tại)
+            let newIndex = trackIndex;
+            while(newIndex === trackIndex && musicList.length > 1) {
+                newIndex = Math.floor(Math.random() * musicList.length);
+            }
+            loadTrack(newIndex);
+            playTrack();
+        }
+
+        function prevTrack() {
+            let newIndex = trackIndex - 1;
+            if (newIndex < 0) newIndex = musicList.length - 1;
+            loadTrack(newIndex);
+            playTrack();
+        }
+        
+        // Cập nhật thanh tiến trình giả
+        currTrack.addEventListener('timeupdate', () => {
+             let position = currTrack.currentTime / currTrack.duration;
+             document.getElementById('seek-bar').style.width = (position * 100) + '%';
+        });
+
+        // --- XỬ LÝ ẢNH BAY LÊN ---
+        function startFloatingPhotos() {
+            const container = document.getElementById('floating-container');
+            
+            setInterval(() => {
+                const img = document.createElement('img');
+                // Chọn ảnh ngẫu nhiên từ danh sách
+                img.src = photos[Math.floor(Math.random() * photos.length)];
+                img.classList.add('floating-photo');
+                
+                // Random vị trí và tốc độ
+                img.style.left = Math.random() * 90 + '%';
+                img.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5s đến 10s
+                img.style.width = (Math.random() * 50 + 100) + 'px'; // Random kích cỡ
+                
+                container.appendChild(img);
+                
+                // Xóa ảnh sau khi bay xong cho nhẹ máy
+                setTimeout(() => { img.remove() }, 10000);
+            }, 800); // Cứ 0.8 giây thả 1 ảnh
+        }
+    </script>
+</body>
+</html>
