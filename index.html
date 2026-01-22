@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍒 odihchnyuq  </title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'viettay';
+            src: url('viettay.ttf') format('truetype'), 
+                 url('viettay.otf') format('opentype'); 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        
+        body {
+            font-family: 'Nunito', sans-serif; overflow: hidden;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fecfef, #ffecd2);
+            background-size: 300% 300%; 
+            animation: bgShift 12s ease infinite;
+            display: flex; justify-content: center; align-items: center; user-select: none;
+        }
+        @keyframes bgShift { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+
+        /* Tim mờ bay ở nền */
+        .bg-heart { 
+            position: absolute; color: rgba(255,255,255,0.6); 
+            animation: floatUpBg var(--d) linear infinite; 
+            pointer-events: none; z-index: 0; filter: blur(1px); 
+        }
+        @keyframes floatUpBg { 
+            from { transform: translateY(110vh) scale(0.5); opacity: 0; } 
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0.8; } 
+        }
+
+        .screen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 10; 
+        }
+        .screen.active { display: flex; animation: fadeIn 0.8s forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Viền sáng Pastel */
+        .pastel-glow { border: 4px solid rgba(255,255,255,0.9); animation: pastelPulse 3s infinite alternate; }
+        @keyframes pastelPulse {
+            0% { box-shadow: 0 0 15px #ff9a9e, 0 0 30px #fad0c4; border-color: #fff; }
+            100% { box-shadow: 0 0 20px #ff6b81, 0 0 40px #ffecd2; border-color: #fff0f5; }
+        }
+
+        /* --- 3. MÀN HÌNH KHÓA --- */
+        .lock-card {
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.8);
+            width: 350px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; gap: 20px;
+            transform: translate3d(0, 0, 0);
+        }
+        .error-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; border-color: #ff4757 !important; }
+        @keyframes shake { 
+            10%, 90% { transform: translate3d(-1px, 0, 0); } 
+            20%, 80% { transform: translate3d(2px, 0, 0); } 
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 
+            40%, 60% { transform: translate3d(4px, 0, 0); } 
+        }
+
+        .lock-header { display: flex; gap: 15px; align-items: center; }
+        .avatar-lock { width: 90px; height: 90px; border-radius: 22px; object-fit: cover; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .lock-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .lock-title { color: #d63031; font-weight: bold; font-size: 1.1rem; }
+        .pass-display { background: #ffcdd2; border-radius: 50px; height: 45px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.7); transition: 0.2s; }
+        .dot.filled { background: white; transform: scale(1.2); }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; }
+        .key:active { transform: translateY(4px); box-shadow: none; }
+        .key-del { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
+
+        /* --- 4. HỘP QUÀ --- */
+        .gift-container { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: floatGift 3s ease-in-out infinite; cursor: pointer; }
+        .gift-img { width: 220px; height: 220px; object-fit: cover; border-radius: 25px; transition: 0.3s; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); border: 5px solid white; }
+        .gift-container:hover .gift-img { transform: scale(1.05); }
+        @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- 5. VIDEO PLAYER --- */
+        .video-wrapper { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; border-radius: 25px; overflow: hidden; z-index: 20; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+        .next-btn { margin-top: 25px; padding: 12px 45px; border-radius: 50px; background: white; color: #ff6b81; border: none; font-weight: bold; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 1.1rem; }
+
+        /* --- 6. BAO THƯ & THƯ --- */
+        #screen-4a { background: rgba(255,192,203, 0.3); }
+        .envelope-box { cursor: pointer; text-align: center; animation: floatGift 3s infinite; }
+        .envelope-img { width: 320px; border-radius: 15px; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: 0.3s; }
+        .envelope-box:hover .envelope-img { transform: scale(1.05); }
+
+        .letter-opened { position: relative; width: 700px; max-width: 95%; background: #fff0f6; padding: 35px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.2); display: flex; gap: 30px; align-items: center; transform: rotate(-2deg); z-index: 30; }
+        .letter-left-img { width: 220px; height: 300px; object-fit: cover; border: 6px solid white; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); transform: skewY(-4deg); border-radius: 8px; flex-shrink: 0; }
+        .letter-content { flex: 1; font-family: 'viettay', cursive; color: #ff6b81; font-size: 1.8rem; font-weight: bold; line-height: 1.5; }
+        .click-text { font-family: 'Nunito', sans-serif; font-size: 1rem; color: #ff6b81; text-align: right; margin-top: 20px; cursor: pointer; background: white; padding: 8px 20px; border-radius: 20px; display: inline-block; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .heart-particle { position: absolute; color: #ff8fa3; pointer-events: none; animation: flyOut 1s ease-out forwards; z-index: 100;}
+        @keyframes flyOut { to { transform: translate(var(--mx), var(--my)) scale(0); opacity: 0; } }
+
+        /* --- 7. MÀN HÌNH CUỐI --- */
+        .final-screen { overflow: hidden; }
+        
+        .wishes-title { 
+            position: absolute; top: 15%; width: 100%; text-align: center;
+            font-family: 'viettay', cursive; 
+            font-size: 2.2rem;
+            z-index: 50; 
+            color: #ff80ab; 
+            text-shadow: 2px 2px 0px #fff;
+            animation: floatingText 3s ease-in-out infinite;
+        }
+        @keyframes floatingText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .wishes-title span { display: inline-block; margin: 0 6px; transition: transform 4s ease-in-out, opacity 4s; }
+        .fly-away { transform: translateY(-120vh) scale(0.8) !important; opacity: 0; }
+
+        #gallery-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .gallery-item { position: absolute; bottom: -500px; will-change: transform; }
+        .gallery-photo { border: 4px solid white; border-radius: 12px; object-fit: cover; }
+        .gallery-icon { filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); animation: floatUpIcon var(--dur) linear var(--del) infinite; }
+        @keyframes floatUpImg { to { bottom: 120%; transform: rotate(0deg); } }
+        @keyframes floatUpIcon { to { bottom: 120%; transform: rotate(var(--r)); } }
+
+        /* --- 8. TRÌNH PHÁT NHẠC (Góc Trái) --- */
+        .music-player {
+            position: fixed; bottom: 30px; left: 30px; width: 80px; height: 80px; 
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
+            border-radius: 40px; display: none; align-items: center; padding: 5px;
+            z-index: 9999; transition: width 0.4s ease-out; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .music-player:hover { width: 420px; background: rgba(255, 255, 255, 0.4); }
+        .disk { width: 66px; height: 66px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; animation: rotateDisk 10s linear infinite; animation-play-state: paused; }
+        .disk.playing { animation-play-state: running; }
+        @keyframes rotateDisk { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .player-content { display: flex; align-items: center; flex: 1; opacity: 0; transition: opacity 0.3s; margin-left: 20px; width: 0; white-space: nowrap; }
+        .music-player:hover .player-content { opacity: 1; width: auto; }
+        .song-info { flex: 1; color: #d63031; overflow: hidden; margin-right: 15px; }
+        .song-title { font-size: 1rem; font-weight: bold; }
+        .song-artist { font-size: 0.8rem; color: #555; }
+        .controls { display: flex; gap: 15px; align-items: center; color: #ff6b81; }
+        .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; }
+        .ctrl-btn:hover { color: #d63031; }
+
+        /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
+        #secret-gift {
+            position: fixed; bottom: 30px; right: 30px; width: 80px; height: 80px;
+            z-index: 9999; opacity: 0; visibility: hidden; transition: width 0.4s ease-out, opacity 1s;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.5); border-radius: 40px;
+            display: flex; align-items: center; padding: 5px; overflow: hidden;
+        }
+        #secret-gift:hover { width: 320px; background: rgba(255, 255, 255, 0.4); }
+        .secret-img { width: 66px; height: 66px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; }
+        .secret-text { color: #d63031; font-weight: bold; font-family: 'Nunito', sans-serif; font-size: 0.95rem; margin-left: 15px; white-space: nowrap; opacity: 0; transition: opacity 0.3s; }
+        #secret-gift:hover .secret-text { opacity: 1; }
+
+    </style>
+</head>
+<body>
+
+    <audio id="wrongSound" src="error.mp3"></audio>
+    <audio id="wowSound" src="wow.mp3"></audio>
+
+    <div id="screen-1" class="screen active">
+        <div class="lock-card" id="lockCard">
+            <div class="lock-header">
+                <img src="anhmodau.jpg" class="avatar-lock" onerror="this.src='https://via.placeholder.com/150'">
+                <div class="lock-info">
+                    <div class="lock-title">Nhập ngày sinh của cậu...</div>
+                    <div class="pass-display">
+                        <div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="keypad">
+                <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
+                <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
+                <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
+                <div class="key" style="background:none; box-shadow:none; cursor:default"></div>
+                <div class="key" onclick="press(0)">0</div>
+                <div class="key key-del" onclick="del()"><i class="fas fa-backspace"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-2" class="screen">
+        <div class="gift-container" onclick="openGift()">
+            <img src="nhanqua.jpg" class="gift-img" onerror="this.src='https://via.placeholder.com/200?text=nhanqua.jpg'">
+            <p style="color:white; font-size:1.8rem; text-shadow:0 2px 5px rgba(0,0,0,0.2); margin-top:20px; font-weight:bold;">Có quà cho cậu nè!</p>
+        </div>
+    </div>
+
+    <div id="screen-3" class="screen">
+        <div class="video-wrapper pastel-glow">
+            <video id="myVideo" playsinline>
+                <source src="cmsn.mp4" type="video/mp4">
+            </video>
+        </div>
+        <button class="next-btn" id="btnNext" onclick="toEnvelope()">Xem thư nè ❤️</button>
+    </div>
+
+    <div id="screen-4a" class="screen">
+        <div class="envelope-box" onclick="openLetter()">
+            <img src="bucthu.jpg" class="envelope-img" onerror="this.src='https://via.placeholder.com/300x200?text=bucthu.jpg'">
+            <p style="color: #d63031; font-family: 'viettay', cursive; font-size: 2.2rem; margin-top: 15px; font-weight:bold;">Mở ra nè...</p>
+        </div>
+    </div>
+
+    <div id="screen-4b" class="screen">
+        <div class="letter-opened" id="theLetter">
+            <img src="bucthu.jpg" class="letter-left-img">
+            <div class="letter-content">
+                <p>Gửi Cậu,</p>
+                <p>Chúc mừng sinh nhật nhoo! Chúc cậu tuổi mới luôn vui vẻ, hạnh phúc và thành công.</p>
+                 Luôn xinh đẹp và rạng rỡ nha!!
+                <p>Các ọp pa hằn quắc chúc mừng em~~</p>
+                <div style="text-align: right;">
+                    <div class="click-text" onclick="explodeLetter(event)">👉 Ấn vào đây nè</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-5" class="screen final-screen">
+        <div class="wishes-title" id="finalText">
+            <span>Chúc </span><span>mọi </span><span>điều </span><span>tốt </span><span>đẹp </span>
+            <span>sẽ </span><span>đến </span><span>với </span><span>cậu </span><span>!!</span>
+        </div>
+        <div id="gallery-container"></div>
+    </div>
+
+    <div class="music-player pastel-glow" id="musicPlayer">
+        <div class="disk" id="disk"></div>
+        <div class="player-content">
+            <div class="song-info"><div class="song-title" id="songTitle">Song</div><div class="song-artist" id="songArtist">Artist</div></div>
+            <div class="controls">
+                <button class="ctrl-btn" onclick="prevSong()"><i class="fas fa-step-backward"></i></button>
+                <button class="ctrl-btn" onclick="togglePlay()"><i class="fas fa-play" id="playIcon"></i></button>
+                <button class="ctrl-btn" onclick="nextSong()"><i class="fas fa-step-forward"></i></button>
+                <button class="ctrl-btn" onclick="toggleShuffle()" title="Shuffle"><i id="shuffleIcon" class="fas fa-random"></i></button>
+            </div>
+        </div>
+        <audio id="audio"></audio>
+    </div>
+
+    <div id="secret-gift" class="pastel-glow" onclick="window.location.href='https://ngl.link/chichikaka_'">
+        <img src="anhmodau.jpg" class="secret-img" onerror="this.src='https://via.placeholder.com/65'">
+        <div class="secret-text">Cậu có điều gì muốn nói khum?</div>
+    </div>
+
+    <script>
+        const PASSWORD = "2301";
+        // DANH SÁCH NHẠC (18 BÀI)
+        const songs = [
+            { title: "Spring Snow", artist: "10cm", src: "springsnow.mp3", img: "springsnow.jpg" },
+            { title: "Toxic Till The End", artist: "Rosé", src: "toxictilltheend.mp3", img: "toxictilltheend.jpg" },
+            { title: "Gone", artist: "Rosé", src: "gone.mp3", img: "gone.jpg" },
+            { title: "APT", artist: "Rosé, Bruno Mars", src: "apt.mp3", img: "apt.jpg" },
+            { title: "Dream", artist: "Lisa", src: "dream.mp3", img: "dream.jpg" },
+            { title: "Earthquake", artist: "Jisoo", src: "earthquake.mp3", img: "earthquake.jpg" },
+            { title: "Enchanted", artist: "Taylor Swift", src: "enchanted.mp3", img: "enchanted.jpg" },
+            { title: "Eyes Closed", artist: "Jisoo, Zayn", src: "eyesclosed.mp3", img: "eyesclosed.jpg" },
+            { title: "Jump", artist: "BlackPink", src: "jump.mp3", img: "jump.jpg" },
+            { title: "Like Jennie", artist: "Jennie", src: "likejennie.mp3", img: "likejennie.jpg" },
+            { title: "Magnetic", artist: "ILLIT", src: "magnetic.mp3", img: "magnetic.jpg" },
+            { title: "Not Cute Anymore", artist: "ILLIT", src: "notcuteanymore.mp3", img: "notcuteanymore.jpg" },
+            { title: "Number One Girl", artist: "Rosé", src: "numberonegirl.mp3", img: "numberonegirl.jpg" },
+            { title: "Together", artist: "Seventeen", src: "together.mp3", img: "together.jpg" },
+            { title: "What Is Love", artist: "Twice", src: "whatislove.mp3", img: "whatislove.jpg" },
+            { title: "Yawn", artist: "Seventeen", src: "yawn.mp3", img: "yawn.jpg" },
+            { title: "You And I", artist: "Park Bom", src: "youandi.mp3", img: "youandi.jpg" }
+        ];
+
+        // ẢNH (1-44)
+        const photos = []; 
+        for(let i=1;i<=44;i++) photos.push(`anh${i}.jpg`);
+        
+        const cuteIcons = ['fas fa-star', 'fas fa-heart', 'fas fa-music', 'fas fa-gift', 'fas fa-ribbon', 'fas fa-candy-cane', 'fas fa-cloud', 'far fa-smile-wink', 'fas fa-birthday-cake'];
+        const colors = ['#ff9a9e', '#a18cd1', '#84fab0', '#fbc2eb', '#fad0c4', '#fff'];
+
+        let pass="", songIdx=0, musicShown=false;
+        let isShuffle = false;
+        const video=document.getElementById('myVideo'), audio=document.getElementById('audio'), player=document.getElementById('musicPlayer');
+        const wrongSound=document.getElementById('wrongSound'), wowSound=document.getElementById('wowSound');
+
+        // TIM NỀN
+        function createBgHearts() {
+            for(let i=0; i<30; i++) {
+                let h = document.createElement('i');
+                h.className = 'fas fa-heart bg-heart';
+                h.style.left = Math.random()*100+'vw';
+                h.style.setProperty('--d', Math.random()*15+10+'s');
+                h.style.fontSize = Math.random()*25+10+'px';
+                document.body.appendChild(h);
+            }
+        }
+        createBgHearts();
+
+        // 1. KHÓA
+        function press(n) { if(pass.length<4) { pass+=n; updateDots(); if(pass.length===4) check(); } }
+        function del() { pass=pass.slice(0,-1); updateDots(); }
+        function updateDots() { for(let i=1;i<=4;i++) document.getElementById('d'+i).classList.toggle('filled', i<=pass.length); }
+        function check() {
+            if(pass===PASSWORD) { 
+                wowSound.play(); switchSc('screen-1','screen-2'); 
+            } else { 
+                wrongSound.currentTime=0; wrongSound.play(); document.getElementById('lockCard').classList.add('error-shake'); 
+                setTimeout(()=>{ document.getElementById('lockCard').classList.remove('error-shake'); pass=""; updateDots(); },400); 
+            }
+        }
+        function switchSc(f,t) { document.getElementById(f).classList.remove('active'); setTimeout(()=>document.getElementById(t).classList.add('active'),500); }
+        function openGift() { switchSc('screen-2','screen-3'); setTimeout(()=>{ video.volume=1.0; video.play(); },800); }
+
+        // 2. VIDEO & NHẠC
+        video.addEventListener('timeupdate', () => {
+            const pct = video.currentTime / video.duration;
+            if(video.duration>0 && pct>0.5 && !musicShown) {
+                musicShown=true; 
+                player.style.display='flex'; 
+                loadSong(0); 
+                audio.volume=0.3; 
+                audio.play().then(() => {
+                    document.getElementById('disk').classList.add('playing');
+                    document.getElementById('playIcon').className='fas fa-pause';
+                }).catch(e=>console.log("Autoplay blocked"));
+            }
+            if(musicShown && pct>0.5) {
+                let targetVol = 0.3 + ((pct-0.5)/0.5) * 0.2; audio.volume = targetVol;
+            }
+        });
+        video.addEventListener('ended', () => {
+            document.getElementById('btnNext').style.display='block';
+            let v = audio.volume;
+            let fade5s = setInterval(() => {
+                if(v < 1.0) { v += 0.01; audio.volume = Math.min(v, 1.0); }
+                else clearInterval(fade5s);
+            }, 100);
+        });
+
+        function toEnvelope() { video.pause(); switchSc('screen-3','screen-4a'); }
+        function openLetter() { switchSc('screen-4a','screen-4b'); }
+
+        // 3. NỔ TIM & MÀN CUỐI
+        function explodeLetter(e) {
+            const rect = e.target.getBoundingClientRect();
+            for(let i=0;i<40;i++){
+                const h=document.createElement('i'); h.className='fas fa-heart heart-particle';
+                h.style.left=rect.left+rect.width/2+'px'; h.style.top=rect.top+'px';
+                const a=Math.random()*360, d=Math.random()*100+50;
+                h.style.setProperty('--mx', Math.cos(a)*d+'px'); h.style.setProperty('--my', Math.sin(a)*d+'px');
+                document.body.appendChild(h); setTimeout(()=>h.remove(),1000);
+            }
+            document.getElementById('theLetter').style.opacity=0; 
+            document.getElementById('theLetter').style.transform="scale(0)";
+            
+            setTimeout(()=>{ switchSc('screen-4b','screen-5'); startCuteGallery(); }, 400);
+        }
+
+        function startCuteGallery() {
+            const con = document.getElementById('gallery-container');
+            const finalText = document.getElementById('finalText').querySelectorAll('span');
+
+            // Mưa ảnh (50 ẢNH - Bay thẳng)
+            for(let i=0; i<50; i++) {
+                createFloatingItem(con, photos[i%photos.length], 'img', i*0.2);
+            }
+            // Mưa icon cute (50 ICON - Bay xoay)
+            for(let i=0; i<50; i++) {
+                createFloatingItem(con, null, 'icon', i*0.3);
+            }
+
+            // CHỮ BAY LÊN (Sau 3s)
+            setTimeout(() => {
+                finalText.forEach((span, idx) => {
+                    setTimeout(() => {
+                        span.classList.add('fly-away');
+                    }, idx * 150);
+                });
+            }, 3000);
+
+            // HIỆN GÓC BÍ MẬT (SAU 15 GIÂY)
+            setTimeout(() => {
+                const secret = document.getElementById('secret-gift');
+                secret.style.visibility = 'visible';
+                secret.style.opacity = '1';
+            }, 15000);
+        }
+
+        function createFloatingItem(container, src, type, delay) {
+            let el;
+            const dur = Math.random() * 20 + 20; 
+            const rot = Math.random()*360 - 180 + 'deg';
+
+            if(type === 'img') {
+                el = document.createElement('img'); el.src = src; el.className = 'gallery-item gallery-photo';
+                el.style.width = (Math.random()*140 + 80) + 'px';
+                el.style.animation = `floatUpImg ${dur}s linear ${delay}s infinite`; 
+            } else {
+                el = document.createElement('i'); 
+                el.className = `gallery-item gallery-icon ${cuteIcons[Math.floor(Math.random()*cuteIcons.length)]}`;
+                el.style.color = colors[Math.floor(Math.random()*colors.length)];
+                el.style.fontSize = (Math.random()*35 + 15) + 'px';
+                el.style.setProperty('--r', rot);
+                el.style.animation = `floatUpIcon ${dur}s linear ${delay}s infinite`; 
+            }
+            
+            el.style.left = Math.random() * 95 + '%';
+            container.appendChild(el);
+        }
+
+        // PLAYER LOGIC (SHUFFLE)
+        function loadSong(i) {
+            document.getElementById('songTitle').innerText=songs[i].title;
+            document.getElementById('songArtist').innerText=songs[i].artist;
+            document.getElementById('disk').style.backgroundImage=`url(${songs[i].img})`;
+            audio.src=songs[i].src;
+        }
+        function togglePlay() { 
+            if(audio.paused) { audio.play(); document.getElementById('disk').classList.add('playing'); document.getElementById('playIcon').className='fas fa-pause'; } 
+            else { audio.pause(); document.getElementById('disk').classList.remove('playing'); document.getElementById('playIcon').className='fas fa-play'; } 
+        }
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            document.getElementById('shuffleIcon').style.color = isShuffle ? '#ff4757' : '#ff6b81';
+        }
+        function nextSong() { 
+            if (isShuffle) {
+                let newIdx;
+                do { newIdx = Math.floor(Math.random() * songs.length); } while (newIdx === songIdx);
+                songIdx = newIdx;
+            } else {
+                songIdx = (songIdx+1)%songs.length; 
+            }
+            loadSong(songIdx); audio.play(); 
+            document.getElementById('disk').classList.add('playing');
+            document.getElementById('playIcon').className='fas fa-pause';
+        }
+        function prevSong() { songIdx=(songIdx-1+songs.length)%songs.length; loadSong(songIdx); audio.play(); }
+        audio.addEventListener('ended', nextSong);
+    </script>
+</body>
+</html>
