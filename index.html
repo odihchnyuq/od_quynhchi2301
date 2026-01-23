@@ -152,6 +152,21 @@
         .controls { display: flex; gap: 15px; align-items: center; color: #ff6b81; }
         .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; }
         .ctrl-btn:hover { color: #d63031; }
+        
+        /* Cherry lấp lánh ở nền */
+.bg-cherry {
+    position: absolute;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    animation: floatUpBg var(--d) linear infinite, sparkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes sparkle {
+    0% { opacity: 0.3; transform: scale(0.8); filter: blur(1px); }
+    100% { opacity: 0.8; transform: scale(1.2); filter: blur(0px) drop-shadow(0 0 5px #fff); }
+}
 
         /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
         #secret-gift {
@@ -315,6 +330,19 @@
             }
         }
         createBgHearts();
+         // Hàm tạo Cherry nền (Chạy song song với trái tim)
+        function createBgCherries() {
+            for(let i=0; i<15; i++) { // Thêm 15 quả cherry
+                let c = document.createElement('div');
+                c.className = 'bg-cherry';
+                c.innerHTML = '🍒'; // Icon cherry
+                c.style.left = Math.random() * 100 + 'vw'; // Vị trí ngẫu nhiên
+                c.style.setProperty('--d', Math.random() * 15 + 10 + 's'); // Tốc độ bay ngẫu nhiên
+                c.style.fontSize = (Math.random() * 15 + 15) + 'px'; // Kích thước to nhỏ khác nhau
+                document.body.appendChild(c);
+            }
+        }
+createBgCherries(); // Kích hoạt ngay lập tức
 
         // 1. KHÓA
         function press(n) { if(pass.length<4) { pass+=n; updateDots(); if(pass.length===4) check(); } }
@@ -457,10 +485,13 @@
         }
         function prevSong() { songIdx=(songIdx-1+songs.length)%songs.length; loadSong(songIdx); audio.play(); }
         audio.addEventListener('ended', nextSong);
+
+        
     </script>
 </body>
 
 </html>
+
 
 
 
