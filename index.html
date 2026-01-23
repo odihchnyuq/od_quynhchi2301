@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> odihchnyuq  </title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%2250%25%22 x=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2278%22>🍒</text></svg>">
-    <link href="https://fonts.googleapis.com/css2? family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @font-face {
@@ -80,15 +80,7 @@
         .dot.filled { background: white; transform: scale(1.2); }
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; }
-        /* HIỆU ỨNG KHI BẤM NÚT */
-        .key:active {
-            transform: translateY(2px); /* Nút lún xuống một chút */
-            background-color: #ff858a;  /* Màu đậm hơn màu gốc một chút */
-            filter: brightness(1.1);    /* Tăng độ sáng nhẹ cho bề mặt */
-            /* Tạo hào quang sáng xung quanh và thu nhỏ bóng đổ dưới chân nút */
-            box-shadow: 0 2px 0 #d63031, 0 0 15px rgba(255, 255, 255, 0.6); 
-            transition: 0.05s;          /* Tốc độ phản hồi cực nhanh */
-        }
+        .key:active { transform: translateY(4px); box-shadow: none; }
         .key-del { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
 
         /* --- 4. HỘP QUÀ --- */
@@ -102,51 +94,50 @@
         video { width: 100%; height: 100%; object-fit: contain; }
         .next-btn { margin-top: 25px; padding: 12px 45px; border-radius: 50px; background: white; color: #ff6b81; border: none; font-weight: bold; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 1.1rem; }
 
-        /* --- HỘP QUÀ (Đã thêm hiệu ứng phóng to) --- */
-        .gift-container { 
+       /* --- BỨC THƯ (Căn chỉnh lại toàn bộ) --- */
+        /* 1. Khung bao ngoài */
+        .letter-opened { 
+            width: 700px; 
+            max-width: 95%; 
+            background: #fff0f6; 
+            padding: 40px; /* Tăng padding để tạo cảm giác khung tranh rộng rãi */
+            border-radius: 20px; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2); 
             display: flex; 
-            flex-direction: column; 
+            gap: 35px; /* Khoảng cách giữa ảnh và chữ */
+            /* Quan trọng: Căn giữa theo chiều dọc */
             align-items: center; 
-            justify-content: center; 
-            animation: floatGift 3s ease-in-out infinite; /* Vẫn bay lơ lửng */
-            cursor: pointer; 
+            transform: rotate(-2deg); 
+            z-index: 30; 
+            /* Thêm viền nhẹ cho tổng thể bức thư */
+            border: 2px solid #ffe0e6;
         }
-        .gift-img { 
-            width: 220px; 
-            height: 220px; 
-            object-fit: cover; 
-            border-radius: 25px; 
-            border: 5px solid white; 
-            /* Quan trọng: Thêm transition để phóng to mượt mà */
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        /* Hiệu ứng khi di chuột vào: Phóng to nhẹ */
-        .gift-container:hover .gift-img { 
-            transform: scale(1.1) rotate(2deg); /* Phóng to 1.1 lần và xoay nhẹ xíu cho sinh động */
-        }
-        @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* 2. ẢNH BÊN TRÁI (To lên đáng kể) */
+        /* 2. Ảnh bên trái (Tạo khung Polaroid đẹp mắt) */
         .letter-left-img { 
-            width: 240px; /* Tăng từ 150px lên 240px */
-            height: 340px; /* Tăng chiều cao tương ứng */
+            width: 240px; 
+            height: 340px; 
             object-fit: cover; 
-            border: 5px solid white; /* Viền ảnh dày hơn chút */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1); 
-            transform: skewY(-3deg); 
-            border-radius: 10px; 
+            /* TẠO KHUNG TRẮNG ĐẸP */
+            padding: 8px; /* Khoảng trắng giữa ảnh và viền */
+            background-color: white; /* Nền trắng */
+            border: 1px solid #eee; /* Viền mờ bên ngoài cùng */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Bóng đổ nhẹ cho khung ảnh */
+            /* Bỏ skewY đi để ảnh đứng ngay ngắn, không bị cảm giác lơ lửng */
+            border-radius: 4px; 
             flex-shrink: 0; 
         }
 
-        /* 3. NỘI DUNG CHỮ (Font bé lại, dòng thoáng hơn) */
+        /* 3. Nội dung chữ (Căn giữa tuyệt đối theo chiều dọc) */
         .letter-content { 
             flex: 1; 
             font-family: 'viettay', cursive; 
             color: #ff6b81; 
-            font-size: 1.2rem; /* Giảm từ 1.4rem xuống 1.2rem cho vừa vặn với khung mới */
+            font-size: 1.3rem; 
             font-weight: bold; 
-            line-height: 1.4; /* Tăng dãn dòng lên một chút cho dễ đọc */
+            line-height: 1.4; 
+            /* Đảm bảo khối chữ luôn nằm giữa chiều cao của ảnh */
+            align-self: center;
         }
 
         /* --- 7. MÀN HÌNH CUỐI --- */
@@ -194,21 +185,6 @@
         .controls { display: flex; gap: 15px; align-items: center; color: #ff6b81; }
         .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; }
         .ctrl-btn:hover { color: #d63031; }
-        
-        /* Cherry lấp lánh ở nền */
-.bg-cherry {
-    position: absolute;
-    font-size: 20px;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-    animation: floatUpBg var(--d) linear infinite, sparkle 3s ease-in-out infinite alternate;
-}
-
-@keyframes sparkle {
-    0% { opacity: 0.3; transform: scale(0.8); filter: blur(1px); }
-    100% { opacity: 0.8; transform: scale(1.2); filter: blur(0px) drop-shadow(0 0 5px #fff); }
-}
 
         /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
         #secret-gift {
@@ -285,10 +261,6 @@
                  Luôn xinh đẹp và rạng rỡ nha!!
                 <p>Các ọp pa hằn quắc chúc mừng em~~</p>
                 <div style="text-align: right;">
-                <div style="margin-top: 40px; text-align: right; margin-right: 15px; line-height: 1.2;">
-                <div style="font-size: 1.2rem; opacity: 0.9;">Fan Chi</div>
-                <div style="font-size: 1.6rem; margin-top: 5px;">  🍒  </div>
-                </div>
                     <div class="click-text" onclick="explodeLetter(event)">👉 Ấn vào đây nè</div>
                 </div>
             </div>
@@ -319,8 +291,8 @@
 
     <div id="secret-gift" class="pastel-glow" onclick="window.location.href='https://ngl.link/chichikaka_'">
         <img src="anhmodau.jpg" class="secret-img" onerror="this.src='https://via.placeholder.com/65'">
-        <div class="secret-text">Cậu có điều gì muốn nói khum? <br>
-           <div style="font-size: 10px; font-weight: normal; opacity: 0.8;">Khong phai ong HA dau :((</div>
+        <div class="secret-text">Cậu có điều gì muốn nói khum?
+        <div style="font-size: 10px; font-weight: normal; opacity: 0.8;">Khong phai ong HA dau :((</div>
         </div>
     </div>
 
@@ -514,21 +486,6 @@
         }
         function prevSong() { songIdx=(songIdx-1+songs.length)%songs.length; loadSong(songIdx); audio.play(); }
         audio.addEventListener('ended', nextSong);
-
-        
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
