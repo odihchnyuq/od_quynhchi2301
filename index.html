@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> odihchnyuq  </title>
+    <title> odihchnyuq</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%2250%25%22 x=%2250%25%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2278%22>🍒</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -29,11 +30,13 @@
             100% { background-position: 0% 50%; } 
         }
 
-        /* Tim mờ bay ở nền */
+        /* --- CHỈ CÒN TIM TRẮNG BAY LỜ MỜ (KHÔNG CÒN CHERRY) --- */
         .bg-heart { 
-            position: absolute; color: rgba(255,255,255,0.6); 
+            position: absolute; 
+            color: rgba(255, 255, 255, 0.6); 
             animation: floatUpBg var(--d) linear infinite; 
-            pointer-events: none; z-index: 0; filter: blur(1px); 
+            pointer-events: none; z-index: 0; 
+            filter: blur(1.5px); 
         }
         @keyframes floatUpBg { 
             from { transform: translateY(110vh) scale(0.5); opacity: 0; } 
@@ -55,13 +58,12 @@
             100% { box-shadow: 0 0 20px #ff6b81, 0 0 40px #ffecd2; border-color: #fff0f5; }
         }
 
-        /* --- 3. MÀN HÌNH KHÓA --- */
+        /* --- MÀN HÌNH KHÓA --- */
         .lock-card {
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px);
             padding: 30px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.8);
             width: 350px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; gap: 20px;
-            transform: translate3d(0, 0, 0);
         }
         .error-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; border-color: #ff4757 !important; }
         @keyframes shake { 
@@ -79,81 +81,59 @@
         .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.7); transition: 0.2s; }
         .dot.filled { background: white; transform: scale(1.2); }
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        
         .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; }
-        .key:active { transform: translateY(4px); box-shadow: none; }
+        .key:active { transform: translateY(2px); background-color: #ff858a; filter: brightness(1.1); box-shadow: 0 2px 0 #d63031, 0 0 15px rgba(255, 255, 255, 0.6); }
         .key-del { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
 
-        /* --- 4. HỘP QUÀ --- */
+        /* --- HỘP QUÀ --- */
         .gift-container { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: floatGift 3s ease-in-out infinite; cursor: pointer; }
-        .gift-img { width: 220px; height: 220px; object-fit: cover; border-radius: 25px; transition: 0.3s; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); border: 5px solid white; }
-        .gift-container:hover .gift-img { transform: scale(1.05); }
+        .gift-img { width: 220px; height: 220px; object-fit: cover; border-radius: 25px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); border: 5px solid white; }
+        .gift-container:hover .gift-img { transform: scale(1.1) rotate(2deg); }
         @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* --- 5. VIDEO PLAYER --- */
+        /* --- VIDEO PLAYER --- */
         .video-wrapper { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; border-radius: 25px; overflow: hidden; z-index: 20; }
         video { width: 100%; height: 100%; object-fit: contain; }
         .next-btn { margin-top: 25px; padding: 12px 45px; border-radius: 50px; background: white; color: #ff6b81; border: none; font-weight: bold; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 1.1rem; }
 
-       /* --- BỨC THƯ (Căn chỉnh lại toàn bộ) --- */
-        /* 1. Khung bao ngoài */
+        /* --- BAO THƯ --- */
+        #screen-4a { background: rgba(255,192,203, 0.3); }
+        .envelope-box { cursor: pointer; text-align: center; animation: floatGift 3s infinite; }
+        .envelope-img { width: 320px; border-radius: 15px; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: 0.3s; }
+        .envelope-box:hover .envelope-img { transform: scale(1.05); }
+
+        /* --- BỨC THƯ --- */
         .letter-opened { 
-            width: 700px; 
-            max-width: 95%; 
-            background: #fff0f6; 
-            padding: 40px; /* Tăng padding để tạo cảm giác khung tranh rộng rãi */
-            border-radius: 20px; 
-            box-shadow: 0 25px 60px rgba(0,0,0,0.2); 
-            display: flex; 
-            gap: 35px; /* Khoảng cách giữa ảnh và chữ */
-            /* Quan trọng: Căn giữa theo chiều dọc */
-            align-items: center; 
-            transform: rotate(-2deg); 
-            z-index: 30; 
-            /* Thêm viền nhẹ cho tổng thể bức thư */
-            border: 2px solid #ffe0e6;
+            width: 680px; 
+            max-width: 95%; background: #fff0f6; padding: 35px; 
+            border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.2); 
+            display: flex; gap: 30px; align-items: center; 
+            transform: rotate(-2deg); z-index: 30; border: 2px solid #ffe0e6;
         }
-
-        /* 2. Ảnh bên trái (Tạo khung Polaroid đẹp mắt) */
         .letter-left-img { 
-            width: 240px; 
-            height: 340px; 
-            object-fit: cover; 
-            /* TẠO KHUNG TRẮNG ĐẸP */
-            padding: 8px; /* Khoảng trắng giữa ảnh và viền */
-            background-color: white; /* Nền trắng */
-            border: 1px solid #eee; /* Viền mờ bên ngoài cùng */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Bóng đổ nhẹ cho khung ảnh */
-            /* Bỏ skewY đi để ảnh đứng ngay ngắn, không bị cảm giác lơ lửng */
-            border-radius: 4px; 
-            flex-shrink: 0; 
+            width: 240px; height: 340px; 
+            object-fit: cover; padding: 8px; background-color: white; border: 1px solid #eee; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-radius: 4px; flex-shrink: 0; 
         }
-
-        /* 3. Nội dung chữ (Căn giữa tuyệt đối theo chiều dọc) */
         .letter-content { 
-            flex: 1; 
-            font-family: 'viettay', cursive; 
-            color: #ff6b81; 
-            font-size: 1.3rem; 
-            font-weight: bold; 
-            line-height: 1.4; 
-            /* Đảm bảo khối chữ luôn nằm giữa chiều cao của ảnh */
-            align-self: center;
+            flex: 1; font-family: 'viettay', cursive; color: #ff6b81; 
+            font-size: 1.2rem; 
+            font-weight: bold; line-height: 1.4; align-self: center; 
         }
+        .click-text { font-family: 'Nunito', sans-serif; font-size: 1rem; color: #ff6b81; text-align: right; cursor: pointer; background: white; padding: 8px 20px; border-radius: 20px; display: inline-block; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .heart-particle { position: absolute; color: #ff8fa3; pointer-events: none; animation: flyOut 1s ease-out forwards; z-index: 100;}
+        @keyframes flyOut { to { transform: translate(var(--mx), var(--my)) scale(0); opacity: 0; } }
 
-        /* --- 7. MÀN HÌNH CUỐI --- */
+        /* --- MÀN HÌNH CUỐI --- */
         .final-screen { overflow: hidden; }
-        
         .wishes-title { 
             position: absolute; top: 15%; width: 100%; text-align: center;
-            font-family: 'viettay', cursive; 
-            font-size: 2.2rem;
-            z-index: 50; 
-            color: #ff80ab; 
-            text-shadow: 2px 2px 0px #fff;
+            font-family: 'viettay', cursive; font-size: 2.2rem; z-index: 50; 
+            color: #ff80ab; text-shadow: 2px 2px 0px #fff;
             animation: floatingText 3s ease-in-out infinite;
         }
         @keyframes floatingText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
         .wishes-title span { display: inline-block; margin: 0 6px; transition: transform 4s ease-in-out, opacity 4s; }
         .fly-away { transform: translateY(-120vh) scale(0.8) !important; opacity: 0; }
 
@@ -164,14 +144,13 @@
         @keyframes floatUpImg { to { bottom: 120%; transform: rotate(0deg); } }
         @keyframes floatUpIcon { to { bottom: 120%; transform: rotate(var(--r)); } }
 
-        /* --- 8. TRÌNH PHÁT NHẠC (Góc Trái) --- */
+        /* --- TRÌNH PHÁT NHẠC --- */
         .music-player {
             position: fixed; bottom: 30px; left: 30px; width: 80px; height: 80px; 
             background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
             border-radius: 40px; display: none; align-items: center; padding: 5px;
             z-index: 9999; transition: width 0.4s ease-out; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.5); cursor: pointer;
         }
         .music-player:hover { width: 420px; background: rgba(255, 255, 255, 0.4); }
         .disk { width: 66px; height: 66px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; animation: rotateDisk 10s linear infinite; animation-play-state: paused; }
@@ -186,7 +165,7 @@
         .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; }
         .ctrl-btn:hover { color: #d63031; }
 
-        /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
+        /* --- GÓC BÍ MẬT --- */
         #secret-gift {
             position: fixed; bottom: 30px; right: 30px; width: 80px; height: 80px;
             z-index: 9999; opacity: 0; visibility: hidden; transition: width 0.4s ease-out, opacity 1s;
@@ -242,7 +221,7 @@
                 <source src="cmsn.mp4" type="video/mp4">
             </video>
         </div>
-        <button class="next-btn" id="btnNext" onclick="toEnvelope()">Xem thư nè 🍒</button>
+        <button class="next-btn" id="btnNext" onclick="toEnvelope()">Xem thư nè ❤️</button>
     </div>
 
     <div id="screen-4a" class="screen">
@@ -255,7 +234,6 @@
     <div id="screen-4b" class="screen">
         <div class="letter-opened" id="theLetter">
             <img src="bucthu.jpg" class="letter-left-img">
-            
             <div class="letter-content">
                 <p>Gửi Cậu,</p>
                 <p>Chúc mừng sinh nhật nhoo! Chúc cậu tuổi mới luôn vui vẻ, hạnh phúc và thành công.</p>
@@ -273,6 +251,7 @@
             </div>
         </div>
     </div>
+
     <div id="screen-5" class="screen final-screen">
         <div class="wishes-title" id="finalText">
             <span>Chúc </span><span>mọi </span><span>điều </span><span>tốt </span><span>đẹp </span>
@@ -297,14 +276,14 @@
 
     <div id="secret-gift" class="pastel-glow" onclick="window.location.href='https://ngl.link/chichikaka_'">
         <img src="anhmodau.jpg" class="secret-img" onerror="this.src='https://via.placeholder.com/65'">
-        <div class="secret-text">Cậu có điều gì muốn nói khum?
-        <div style="font-size: 10px; font-weight: normal; opacity: 0.8;">Khong phai ong HA dau :((</div>
+        <div class="secret-text" style="display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+            <span>Cậu có điều gì muốn nói khum?</span>
+            <span style="font-size: 10px; font-weight: normal; opacity: 0.8;">Khong phai ong HA dau :((</span>
         </div>
     </div>
 
     <script>
         const PASSWORD = "2301";
-        // DANH SÁCH NHẠC (18 BÀI)
         const songs = [
             { title: "Spring Snow", artist: "10cm", src: "springsnow.mp3", img: "springsnow.jpg" },
             { title: "My Old Story", artist: "IU", src: "myoldstory.mp3", img: "myoldstory.jpg" },
@@ -326,7 +305,6 @@
             { title: "You And I", artist: "Park Bom", src: "youandi.mp3", img: "youandi.jpg" }
         ];
 
-        // ẢNH (1-44)
         const photos = []; 
         for(let i=1;i<=44;i++) photos.push(`anh${i}.jpg`);
         
@@ -338,7 +316,7 @@
         const video=document.getElementById('myVideo'), audio=document.getElementById('audio'), player=document.getElementById('musicPlayer');
         const wrongSound=document.getElementById('wrongSound'), wowSound=document.getElementById('wowSound');
 
-        // TIM NỀN
+        // CHỈ TẠO TIM (KHÔNG CÒN CHERRY BAY)
         function createBgHearts() {
             for(let i=0; i<30; i++) {
                 let h = document.createElement('i');
@@ -415,25 +393,16 @@
             const con = document.getElementById('gallery-container');
             const finalText = document.getElementById('finalText').querySelectorAll('span');
 
-            // Mưa ảnh (50 ẢNH - Bay thẳng)
-            for(let i=0; i<50; i++) {
-                createFloatingItem(con, photos[i%photos.length], 'img', i*0.2);
-            }
-            // Mưa icon cute (50 ICON - Bay xoay)
-            for(let i=0; i<50; i++) {
-                createFloatingItem(con, null, 'icon', i*0.3);
-            }
+            // Mưa ảnh và icon (KHÔNG CÒN CHERRY)
+            for(let i=0; i<50; i++) createFloatingItem(con, photos[i%photos.length], 'img', i*0.2);
+            for(let i=0; i<50; i++) createFloatingItem(con, null, 'icon', i*0.3);
 
-            // CHỮ BAY LÊN (Sau 3s)
             setTimeout(() => {
                 finalText.forEach((span, idx) => {
-                    setTimeout(() => {
-                        span.classList.add('fly-away');
-                    }, idx * 150);
+                    setTimeout(() => { span.classList.add('fly-away'); }, idx * 150);
                 });
             }, 3000);
 
-            // HIỆN GÓC BÍ MẬT (SAU 15 GIÂY)
             setTimeout(() => {
                 const secret = document.getElementById('secret-gift');
                 secret.style.visibility = 'visible';
@@ -495,4 +464,3 @@
     </script>
 </body>
 </html>
-
