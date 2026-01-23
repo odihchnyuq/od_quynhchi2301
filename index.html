@@ -80,7 +80,15 @@
         .dot.filled { background: white; transform: scale(1.2); }
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; }
-        .key:active { transform: translateY(4px); box-shadow: none; }
+        /* HIỆU ỨNG KHI BẤM NÚT */
+        .key:active {
+            transform: translateY(2px); /* Nút lún xuống một chút */
+            background-color: #ff858a;  /* Màu đậm hơn màu gốc một chút */
+            filter: brightness(1.1);    /* Tăng độ sáng nhẹ cho bề mặt */
+            /* Tạo hào quang sáng xung quanh và thu nhỏ bóng đổ dưới chân nút */
+            box-shadow: 0 2px 0 #d63031, 0 0 15px rgba(255, 255, 255, 0.6); 
+            transition: 0.05s;          /* Tốc độ phản hồi cực nhanh */
+        }
         .key-del { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
 
         /* --- 4. HỘP QUÀ --- */
@@ -502,6 +510,7 @@
 </body>
 
 </html>
+
 
 
 
