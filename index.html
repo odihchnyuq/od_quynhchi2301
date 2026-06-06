@@ -21,6 +21,7 @@
             background-size: 300% 300%; 
             animation: bgShift 12s ease infinite;
             display: flex; justify-content: center; align-items: center; user-select: none;
+            -webkit-tap-highlight-color: transparent; /* Tắt viền xanh khi bấm trên điện thoại */
         }
         @keyframes bgShift { 
             0% { background-position: 0% 50%; } 
@@ -28,7 +29,6 @@
             100% { background-position: 0% 50%; } 
         }
 
-        /* Tim mờ bay ở nền */
         .bg-heart { 
             position: absolute; color: rgba(255,255,255,0.6); 
             animation: floatUpBg var(--d) linear infinite; 
@@ -47,16 +47,14 @@
         .screen.active { display: flex; animation: fadeIn 0.8s forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Viền sáng Pastel */
         .pastel-glow { border: 4px solid rgba(255,255,255,0.9); animation: pastelPulse 3s infinite alternate; }
         @keyframes pastelPulse {
             0% { box-shadow: 0 0 15px #ff9a9e, 0 0 30px #fad0c4; border-color: #fff; }
             100% { box-shadow: 0 0 20px #ff6b81, 0 0 40px #ffecd2; border-color: #fff0f5; }
         }
 
-        /* --- 3. MÀN HÌNH KHÓA --- */
         .lock-card {
-            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             padding: 30px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.8);
             width: 350px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; gap: 20px;
@@ -78,22 +76,19 @@
         .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.7); transition: 0.2s; }
         .dot.filled { background: white; transform: scale(1.2); }
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; }
+        .key { background: #ff9a9e; color: white; border-radius: 15px; height: 60px; font-size: 1.6rem; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #e08e8e; transition: 0.1s; touch-action: manipulation; }
         .key:active { transform: translateY(4px); box-shadow: none; }
         .key-del { background: #ff7675; box-shadow: 0 4px 0 #d63031; }
 
-        /* --- 4. HỘP QUÀ --- */
         .gift-container { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: floatGift 3s ease-in-out infinite; cursor: pointer; }
         .gift-img { width: 220px; height: 220px; object-fit: cover; border-radius: 25px; transition: 0.3s; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); border: 5px solid white; }
         .gift-container:hover .gift-img { transform: scale(1.05); }
         @keyframes floatGift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* --- 5. VIDEO PLAYER --- */
         .video-wrapper { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; border-radius: 25px; overflow: hidden; z-index: 20; }
         video { width: 100%; height: 100%; object-fit: contain; }
         .next-btn { margin-top: 25px; padding: 12px 45px; border-radius: 50px; background: white; color: #ff6b81; border: none; font-weight: bold; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 1.1rem; }
 
-        /* --- 6. BAO THƯ & THƯ --- */
         #screen-4a { background: rgba(255,192,203, 0.3); }
         .envelope-box { cursor: pointer; text-align: center; animation: floatGift 3s infinite; }
         .envelope-img { width: 320px; border-radius: 15px; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: 0.3s; }
@@ -106,20 +101,9 @@
         .heart-particle { position: absolute; color: #ff8fa3; pointer-events: none; animation: flyOut 1s ease-out forwards; z-index: 100;}
         @keyframes flyOut { to { transform: translate(var(--mx), var(--my)) scale(0); opacity: 0; } }
 
-        /* --- 7. MÀN HÌNH CUỐI --- */
         .final-screen { overflow: hidden; }
-        
-        .wishes-title { 
-            position: absolute; top: 15%; width: 100%; text-align: center;
-            font-family: 'viettay', cursive; 
-            font-size: 2.2rem;
-            z-index: 50; 
-            color: #ff80ab; 
-            text-shadow: 2px 2px 0px #fff;
-            animation: floatingText 3s ease-in-out infinite;
-        }
+        .wishes-title { position: absolute; top: 15%; width: 100%; text-align: center; font-family: 'viettay', cursive; font-size: 2.2rem; z-index: 50; color: #ff80ab; text-shadow: 2px 2px 0px #fff; animation: floatingText 3s ease-in-out infinite; }
         @keyframes floatingText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
         .wishes-title span { display: inline-block; margin: 0 6px; transition: transform 4s ease-in-out, opacity 4s; }
         .fly-away { transform: translateY(-120vh) scale(0.8) !important; opacity: 0; }
 
@@ -133,76 +117,60 @@
         /* --- 8. TRÌNH PHÁT NHẠC (Góc Trái) --- */
         .music-player {
             position: fixed; bottom: 30px; left: 30px; width: 80px; height: 80px; 
-            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             border-radius: 40px; display: none; align-items: center; padding: 5px;
             z-index: 9999; transition: width 0.4s ease-out; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.5); cursor: pointer;
+            touch-action: manipulation; /* Tối ưu cảm ứng mượt mà */
         }
-        .music-player:hover { width: 420px; background: rgba(255, 255, 255, 0.4); }
+        /* Mở rộng khi hover (máy tính) hoặc khi class expanded được thêm (điện thoại) */
+        .music-player:hover, .music-player.expanded { width: 420px; background: rgba(255, 255, 255, 0.4); }
         .disk { width: 66px; height: 66px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; animation: rotateDisk 10s linear infinite; animation-play-state: paused; }
         .disk.playing { animation-play-state: running; }
         @keyframes rotateDisk { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .player-content { display: flex; align-items: center; flex: 1; opacity: 0; transition: opacity 0.3s; margin-left: 20px; width: 0; white-space: nowrap; }
-        .music-player:hover .player-content { opacity: 1; width: auto; }
+        .music-player:hover .player-content, .music-player.expanded .player-content { opacity: 1; width: auto; }
         .song-info { flex: 1; color: #d63031; overflow: hidden; margin-right: 15px; }
         .song-title { font-size: 1rem; font-weight: bold; }
         .song-artist { font-size: 0.8rem; color: #555; }
         .controls { display: flex; gap: 15px; align-items: center; color: #ff6b81; }
-        .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; }
+        .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; touch-action: manipulation; padding: 10px; margin: -10px; }
         .ctrl-btn:hover { color: #d63031; }
 
         /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
         #secret-gift {
             position: fixed; bottom: 30px; right: 30px; width: 80px; height: 80px;
             z-index: 9999; opacity: 0; visibility: hidden; transition: width 0.4s ease-out, opacity 1s;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.5); border-radius: 40px;
-            display: flex; align-items: center; padding: 5px; overflow: hidden;
+            cursor: pointer; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.5); border-radius: 40px; display: flex; align-items: center; padding: 5px; overflow: hidden;
         }
         #secret-gift:hover { width: 320px; background: rgba(255, 255, 255, 0.4); }
         .secret-img { width: 66px; height: 66px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.8); flex-shrink: 0; }
         .secret-text { color: #d63031; font-weight: bold; font-family: 'Nunito', sans-serif; font-size: 0.95rem; margin-left: 15px; white-space: nowrap; opacity: 0; transition: opacity 0.3s; }
         #secret-gift:hover .secret-text { opacity: 1; }
 
-        /* ==========================================================================
-           CHỈ THÊM PHẦN NÀY ĐỂ TỐI ƯU HIỂN THỊ TRÊN ĐIỆN THOẠI
-           (Mọi thông số bên trên được giữ nguyên vẹn cho màn hình máy tính)
-           ========================================================================== */
+        /* MÃ MEDIA QUERIES TỐI ƯU GIAO DIỆN DI ĐỘNG */
         @media (max-width: 768px) {
-            /* Mở cuộn để các màn hình không bị cắt nếu nội dung quá cao */
             .screen { overflow-y: auto; justify-content: flex-start; padding: 10vh 20px; }
-            
-            /* Thu nhỏ khung nhập mật khẩu */
             .lock-card { width: 100%; max-width: 320px; padding: 25px; margin: 0 auto; gap: 15px; }
             .avatar-lock { width: 70px; height: 70px; }
             .key { height: 50px; font-size: 1.4rem; }
-            
-            /* Thu nhỏ hộp quà và phong bì */
             .gift-img { width: 180px; height: 180px; }
             .envelope-img { width: 90%; max-width: 280px; }
             
-            /* Đưa thư về dạng dọc (ảnh trên, chữ dưới) để không bị ép ngang */
             .letter-opened { 
-                flex-direction: column; 
-                width: 100%; 
-                padding: 25px 20px; 
-                transform: rotate(0deg); /* Bỏ nghiêng trên đt cho dễ đọc */
-                gap: 20px;
-                margin: 0 auto;
-                text-align: center;
+                flex-direction: column; width: 100%; padding: 25px 20px; 
+                transform: rotate(0deg); gap: 20px; margin: 0 auto; text-align: center;
             }
             .letter-left-img { width: 160px; height: 220px; transform: skewY(0deg); }
             .letter-content { font-size: 1.4rem; width: 100%; }
             .click-text { float: none; display: inline-block; margin-top: 15px; }
             
-            /* Giảm size chữ màn hình cuối */
             .wishes-title { font-size: 1.6rem; top: 8%; padding: 0 10px; }
             
-            /* Giới hạn độ dài khi bấm vào thanh nhạc / hộp quà để không tràn lề */
             .music-player { bottom: 15px; left: 15px; width: 60px; height: 60px; }
-            .music-player:hover { width: calc(100vw - 30px); }
+            .music-player:hover, .music-player.expanded { width: calc(100vw - 30px); }
+            
             #secret-gift { bottom: 15px; right: 15px; width: 60px; height: 60px; }
             #secret-gift:hover { width: calc(100vw - 30px); }
             .disk, .secret-img { width: 48px; height: 48px; }
@@ -282,15 +250,15 @@
         <div id="gallery-container"></div>
     </div>
 
-    <div class="music-player pastel-glow" id="musicPlayer">
+    <div class="music-player pastel-glow" id="musicPlayer" onclick="expandPlayer(event)">
         <div class="disk" id="disk"></div>
         <div class="player-content">
             <div class="song-info"><div class="song-title" id="songTitle">Song</div><div class="song-artist" id="songArtist">Artist</div></div>
             <div class="controls">
-                <button class="ctrl-btn" onclick="prevSong()"><i class="fas fa-step-backward"></i></button>
-                <button class="ctrl-btn" onclick="togglePlay()"><i class="fas fa-play" id="playIcon"></i></button>
-                <button class="ctrl-btn" onclick="nextSong()"><i class="fas fa-step-forward"></i></button>
-                <button class="ctrl-btn" onclick="toggleShuffle()" title="Shuffle"><i id="shuffleIcon" class="fas fa-random"></i></button>
+                <button class="ctrl-btn" onclick="event.stopPropagation(); prevSong()"><i class="fas fa-step-backward"></i></button>
+                <button class="ctrl-btn" onclick="event.stopPropagation(); togglePlay()"><i class="fas fa-play" id="playIcon"></i></button>
+                <button class="ctrl-btn" onclick="event.stopPropagation(); nextSong()"><i class="fas fa-step-forward"></i></button>
+                <button class="ctrl-btn" onclick="event.stopPropagation(); toggleShuffle()" title="Shuffle"><i id="shuffleIcon" class="fas fa-random"></i></button>
             </div>
         </div>
         <audio id="audio"></audio>
@@ -305,7 +273,6 @@
 
     <script>
         const PASSWORD = "2301";
-        // DANH SÁCH NHẠC (18 BÀI)
         const songs = [
             { title: "Spring Snow", artist: "10cm", src: "springsnow.mp3", img: "springsnow.jpg" },
             { title: "My Old Story", artist: "IU", src: "myoldstory.mp3", img: "myoldstory.jpg" },
@@ -327,7 +294,6 @@
             { title: "You And I", artist: "Park Bom", src: "youandi.mp3", img: "youandi.jpg" }
         ];
 
-        // ẢNH (1-44)
         const photos = []; 
         for(let i=1;i<=44;i++) photos.push(`anh${i}.jpg`);
         
@@ -339,7 +305,6 @@
         const video=document.getElementById('myVideo'), audio=document.getElementById('audio'), player=document.getElementById('musicPlayer');
         const wrongSound=document.getElementById('wrongSound'), wowSound=document.getElementById('wowSound');
 
-        // TIM NỀN
         function createBgHearts() {
             for(let i=0; i<30; i++) {
                 let h = document.createElement('i');
@@ -352,22 +317,31 @@
         }
         createBgHearts();
 
-        // 1. KHÓA
         function press(n) { if(pass.length<4) { pass+=n; updateDots(); if(pass.length===4) check(); } }
         function del() { pass=pass.slice(0,-1); updateDots(); }
         function updateDots() { for(let i=1;i<=4;i++) document.getElementById('d'+i).classList.toggle('filled', i<=pass.length); }
         function check() {
             if(pass===PASSWORD) { 
-                wowSound.play(); switchSc('screen-1','screen-2'); 
+                wowSound.play(); 
+                
+                /* ====================================================
+                   THỦ THUẬT MỞ KHÓA AUDIO CHO ĐIỆN THOẠI
+                   (Chạy ngầm nhạc ngay lúc người dùng vừa bấm trúng mật khẩu)
+                   ==================================================== */
+                audio.src = songs[0].src;
+                audio.load();
+                audio.play().then(() => { audio.pause(); }).catch(e => console.log("Audio unlocked!"));
+
+                switchSc('screen-1','screen-2'); 
             } else { 
                 wrongSound.currentTime=0; wrongSound.play(); document.getElementById('lockCard').classList.add('error-shake'); 
                 setTimeout(()=>{ document.getElementById('lockCard').classList.remove('error-shake'); pass=""; updateDots(); },400); 
             }
         }
+
         function switchSc(f,t) { document.getElementById(f).classList.remove('active'); setTimeout(()=>document.getElementById(t).classList.add('active'),500); }
         function openGift() { switchSc('screen-2','screen-3'); setTimeout(()=>{ video.volume=1.0; video.play(); },800); }
 
-        // 2. VIDEO & NHẠC
         video.addEventListener('timeupdate', () => {
             const pct = video.currentTime / video.duration;
             if(video.duration>0 && pct>0.5 && !musicShown) {
@@ -396,7 +370,6 @@
         function toEnvelope() { video.pause(); switchSc('screen-3','screen-4a'); }
         function openLetter() { switchSc('screen-4a','screen-4b'); }
 
-        // 3. NỔ TIM & MÀN CUỐI
         function explodeLetter(e) {
             const rect = e.target.getBoundingClientRect();
             for(let i=0;i<40;i++){
@@ -416,16 +389,13 @@
             const con = document.getElementById('gallery-container');
             const finalText = document.getElementById('finalText').querySelectorAll('span');
 
-            // Mưa ảnh (50 ẢNH - Bay thẳng)
             for(let i=0; i<50; i++) {
                 createFloatingItem(con, photos[i%photos.length], 'img', i*0.2);
             }
-            // Mưa icon cute (50 ICON - Bay xoay)
             for(let i=0; i<50; i++) {
                 createFloatingItem(con, null, 'icon', i*0.3);
             }
 
-            // CHỮ BAY LÊN (Sau 3s)
             setTimeout(() => {
                 finalText.forEach((span, idx) => {
                     setTimeout(() => {
@@ -434,7 +404,6 @@
                 });
             }, 3000);
 
-            // HIỆN GÓC BÍ MẬT (SAU 15 GIÂY)
             setTimeout(() => {
                 const secret = document.getElementById('secret-gift');
                 secret.style.visibility = 'visible';
@@ -464,7 +433,21 @@
             container.appendChild(el);
         }
 
-        // PLAYER LOGIC (SHUFFLE)
+        /* ====================================================
+           ĐIỀU KHIỂN NHẠC TỐI ƯU CHO CẢM ỨNG
+           ==================================================== */
+        function expandPlayer(event) {
+            // Khi người dùng bấm vào thanh nhạc trên điện thoại, nó sẽ mở ra và không tự động đóng lại khi lỡ tay chạm nhầm
+            player.classList.add('expanded');
+        }
+
+        // Bấm ra ngoài màn hình sẽ thu nhỏ thanh nhạc lại
+        document.addEventListener('click', function(e) {
+            if (!player.contains(e.target)) {
+                player.classList.remove('expanded');
+            }
+        });
+
         function loadSong(i) {
             document.getElementById('songTitle').innerText=songs[i].title;
             document.getElementById('songArtist').innerText=songs[i].artist;
