@@ -301,16 +301,20 @@
         function openGift() { 
             switchSc('screen-2','screen-3'); 
             
-            /* --- HACK SAFARI: Mở khóa quyền phát nhạc âm thầm ngay khi bấm hộp quà --- */
+            /* --- HACK SAFARI: Tắt tiếng (MUTE) hoàn toàn để lừa trình duyệt --- */
+            audio.muted = true; // Ép câm tiếng (Safari ko chặn lệnh này)
             loadSong(0);
+            
             audio.play().then(() => {
-                audio.pause(); // Bật lên cái tắt luôn để Safari nhớ là đã được cấp quyền
+                audio.pause(); // Cấp quyền xong tắt ngay lập tức
+                audio.currentTime = 0; // Tua lại bài hát về giây đầu tiên
+                audio.muted = false; // Bật loa trở lại để chuẩn bị chờ đến mốc 50%
             }).catch(e => console.log("Unlock Bypass:", e));
 
             setTimeout(()=>{ video.volume=1.0; video.play(); },800); 
         }
 
-        /* --- ĐÂY LÀ ĐOẠN 50% BẠN YÊU CẦU ĐƯỢC GIỮ NGUYÊN HOÀN TOÀN --- */
+        /* --- ĐÂY LÀ ĐOẠN 50% BẠN YÊU CẦU GIỮ NGUYÊN --- */
         video.addEventListener('timeupdate', () => {
             const pct = video.currentTime / video.duration;
             if(video.duration>0 && pct>0.5 && !musicShown) {
@@ -321,7 +325,7 @@
                 audio.play().then(() => {
                     document.getElementById('disk').classList.add('playing');
                     document.getElementById('playIcon').className='fas fa-pause';
-                }).catch(e=>console.log("Autoplay blocked"));
+                }).catch(e=>console.log("Autoplay blocked at 50%:", e));
             }
             if(musicShown && pct>0.5) {
                 let targetVol = 0.3 + ((pct-0.5)/0.5) * 0.2; audio.volume = targetVol;
