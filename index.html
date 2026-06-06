@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>odihchnyuq</title>
+    <title> odihchnyuq  </title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -235,7 +235,8 @@
 
     <div id="secret-gift" class="pastel-glow" onclick="window.location.href='https://ngl.link/chichikaka_'">
         <img src="anhmodau.jpg" class="secret-img" onerror="this.src='https://via.placeholder.com/65'">
-        <div class="secret-text">Cậu có điều gì muốn nói khum?</div>
+        <div class="secret-text">Cậu có điều gì muốn nói khum?
+        </div>
     </div>
 
     <script>
@@ -298,10 +299,21 @@
         
         function openGift() { 
             switchSc('screen-2','screen-3'); 
+            
+            /* --- HACK SAFARI: Tắt tiếng (MUTE) hoàn toàn để lừa trình duyệt --- */
+            audio.muted = true; // Ép câm tiếng (Safari ko chặn lệnh này)
+            loadSong(0);
+            
+            audio.play().then(() => {
+                audio.pause(); // Cấp quyền xong tắt ngay lập tức
+                audio.currentTime = 0; // Tua lại bài hát về giây đầu tiên
+                audio.muted = false; // Bật loa trở lại để chuẩn bị chờ đến mốc 50%
+            }).catch(e => console.log("Unlock Bypass:", e));
+
             setTimeout(()=>{ video.volume=1.0; video.play(); },800); 
         }
 
-        /* --- SỰ KIỆN AUDIO CHUẨN ĐƯỢC GIỮ NGUYÊN (NHƯ BẢN GỐC CỦA CẬU) --- */
+        /* --- ĐÂY LÀ ĐOẠN 50% BẠN YÊU CẦU GIỮ NGUYÊN --- */
         video.addEventListener('timeupdate', () => {
             const pct = video.currentTime / video.duration;
             if(video.duration>0 && pct>0.5 && !musicShown) {
@@ -312,7 +324,7 @@
                 audio.play().then(() => {
                     document.getElementById('disk').classList.add('playing');
                     document.getElementById('playIcon').className='fas fa-pause';
-                }).catch(e=>console.log("Autoplay blocked by browser policy"));
+                }).catch(e=>console.log("Autoplay blocked at 50%:", e));
             }
             if(musicShown && pct>0.5) {
                 let targetVol = 0.3 + ((pct-0.5)/0.5) * 0.2; audio.volume = targetVol;
@@ -381,17 +393,21 @@
             container.appendChild(el);
         }
 
-        /* --- Tối ưu touch cảm ứng giữ nguyên --- */
         function expandPlayer(event) { player.classList.add('expanded'); }
         document.addEventListener('click', function(e) {
             if (!player.contains(e.target)) { player.classList.remove('expanded'); }
         });
 
+        // GIỮ LẠI LỆNH TẢI NHẠC KHÔNG BỊ TRÙNG MẶC ĐỊNH
         function loadSong(i) {
             document.getElementById('songTitle').innerText=songs[i].title;
             document.getElementById('songArtist').innerText=songs[i].artist;
             document.getElementById('disk').style.backgroundImage=`url(${songs[i].img})`;
-            audio.src=songs[i].src;
+            
+            // Dòng này chặn việc gán lại source nếu bài đó đã được nạp ở cú click "Hộp Quà", để Safari không tước quyền lại
+            if (!audio.src.includes(songs[i].src)) {
+                audio.src=songs[i].src;
+            }
         }
         
         function togglePlay() { 
