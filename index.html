@@ -298,21 +298,10 @@
         
         function openGift() { 
             switchSc('screen-2','screen-3'); 
-            
-            /* --- HACK SAFARI: Tắt tiếng (MUTE) hoàn toàn để lừa trình duyệt --- */
-            audio.muted = true; // Ép câm tiếng (Safari ko chặn lệnh này)
-            loadSong(0);
-            
-            audio.play().then(() => {
-                audio.pause(); // Cấp quyền xong tắt ngay lập tức
-                audio.currentTime = 0; // Tua lại bài hát về giây đầu tiên
-                audio.muted = false; // Bật loa trở lại để chuẩn bị chờ đến mốc 50%
-            }).catch(e => console.log("Unlock Bypass:", e));
-
             setTimeout(()=>{ video.volume=1.0; video.play(); },800); 
         }
 
-        /* --- ĐÂY LÀ ĐOẠN 50% BẠN YÊU CẦU GIỮ NGUYÊN --- */
+        /* --- SỰ KIỆN AUDIO CHUẨN ĐƯỢC GIỮ NGUYÊN (NHƯ BẢN GỐC CỦA CẬU) --- */
         video.addEventListener('timeupdate', () => {
             const pct = video.currentTime / video.duration;
             if(video.duration>0 && pct>0.5 && !musicShown) {
@@ -323,7 +312,7 @@
                 audio.play().then(() => {
                     document.getElementById('disk').classList.add('playing');
                     document.getElementById('playIcon').className='fas fa-pause';
-                }).catch(e=>console.log("Autoplay blocked at 50%:", e));
+                }).catch(e=>console.log("Autoplay blocked by browser policy"));
             }
             if(musicShown && pct>0.5) {
                 let targetVol = 0.3 + ((pct-0.5)/0.5) * 0.2; audio.volume = targetVol;
@@ -392,21 +381,17 @@
             container.appendChild(el);
         }
 
+        /* --- Tối ưu touch cảm ứng giữ nguyên --- */
         function expandPlayer(event) { player.classList.add('expanded'); }
         document.addEventListener('click', function(e) {
             if (!player.contains(e.target)) { player.classList.remove('expanded'); }
         });
 
-        // GIỮ LẠI LỆNH TẢI NHẠC KHÔNG BỊ TRÙNG MẶC ĐỊNH
         function loadSong(i) {
             document.getElementById('songTitle').innerText=songs[i].title;
             document.getElementById('songArtist').innerText=songs[i].artist;
             document.getElementById('disk').style.backgroundImage=`url(${songs[i].img})`;
-            
-            // Dòng này chặn việc gán lại source nếu bài đó đã được nạp ở cú click "Hộp Quà", để Safari không tước quyền lại
-            if (!audio.src.includes(songs[i].src)) {
-                audio.src=songs[i].src;
-            }
+            audio.src=songs[i].src;
         }
         
         function togglePlay() { 
