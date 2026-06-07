@@ -89,7 +89,6 @@
         @keyframes floatUpImg { to { bottom: 120%; transform: rotate(0deg); } }
         @keyframes floatUpIcon { to { bottom: 120%; transform: rotate(var(--r)); } }
 
-        /* --- 8. TRÌNH PHÁT NHẠC (Góc Trái) --- */
         .music-player {
             position: fixed; bottom: 30px; left: 30px; width: 80px; height: 80px; 
             background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -110,7 +109,6 @@
         .ctrl-btn { background: none; border: none; color: #ff6b81; cursor: pointer; font-size: 1.2rem; touch-action: manipulation; padding: 10px; margin: -10px; }
         .ctrl-btn:hover { color: #d63031; }
 
-        /* --- 9. GÓC BÍ MẬT (Góc Phải) --- */
         #secret-gift {
             position: fixed; bottom: 30px; right: 30px; width: 80px; height: 80px;
             z-index: 9999; opacity: 0; visibility: hidden; transition: width 0.4s ease-out, opacity 1s;
@@ -122,7 +120,6 @@
         .secret-text { color: #d63031; font-weight: bold; font-family: 'Nunito', sans-serif; font-size: 0.95rem; margin-left: 15px; white-space: nowrap; opacity: 0; transition: opacity 0.3s; }
         #secret-gift:hover .secret-text { opacity: 1; }
 
-        /* MEDIA QUERIES TỐI ƯU CHO TRÌNH DUYỆT ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .screen { overflow-y: auto; justify-content: flex-start; padding: 10vh 20px; }
             .lock-card { width: 100%; max-width: 320px; padding: 25px; margin: 0 auto; gap: 15px; }
@@ -300,16 +297,14 @@
         function openGift() { 
             switchSc('screen-2','screen-3'); 
             
-            /* --- HACK SAFARI: Mở khóa quyền phát nhạc âm thầm ngay khi bấm hộp quà --- */
             loadSong(0);
             audio.play().then(() => {
-                audio.pause(); // Bật lên cái tắt luôn để Safari nhớ là đã được cấp quyền
+                audio.pause(); 
             }).catch(e => console.log("Unlock Bypass:", e));
 
             setTimeout(()=>{ video.volume=1.0; video.play(); },800); 
         }
 
-        /* --- ĐÂY LÀ ĐOẠN 50% BẠN YÊU CẦU ĐƯỢC GIỮ NGUYÊN HOÀN TOÀN --- */
         video.addEventListener('timeupdate', () => {
             const pct = video.currentTime / video.duration;
             if(video.duration>0 && pct>0.5 && !musicShown) {
@@ -394,13 +389,11 @@
             if (!player.contains(e.target)) { player.classList.remove('expanded'); }
         });
 
-        // GIỮ LẠI LỆNH TẢI NHẠC KHÔNG BỊ TRÙNG MẶC ĐỊNH
         function loadSong(i) {
             document.getElementById('songTitle').innerText=songs[i].title;
             document.getElementById('songArtist').innerText=songs[i].artist;
             document.getElementById('disk').style.backgroundImage=`url(${songs[i].img})`;
             
-            // Dòng này chặn việc gán lại source nếu bài đó đã được nạp ở cú click "Hộp Quà", để Safari không tước quyền lại
             if (!audio.src.includes(songs[i].src)) {
                 audio.src=songs[i].src;
             }
